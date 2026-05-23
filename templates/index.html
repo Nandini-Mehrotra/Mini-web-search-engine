@@ -20,12 +20,22 @@
             <button type="submit">Search</button>
         </form>
 
+        {% if history %}
+            <div class="history-box">
+                <h3>Recent Searches</h3>
+
+                {% for item in history %}
+                    <p>{{ item[0] }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
         <div class="results">
-            {% for title, url, content in results %}
+            {% for result in results %}
                 <div class="result-card">
-                    <h2>{{ title }}</h2>
-                    <a href="{{ url }}" target="_blank">{{ url }}</a>
-                    <p>{{ content[:300] }}...</p>
+                    <h2>{{ result.title }}</h2>
+                    <a href="{{ result.url }}" target="_blank">{{ result.url }}</a>
+                    <p>{{ result.snippet }}</p>
+                    <small>Relevance Score: {{ result.score }}</small>
                 </div>
             {% endfor %}
         </div>

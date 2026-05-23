@@ -41,3 +41,17 @@ button {
 .result-card a {
     color: #1a0dab;
 }
+
+.history-box {
+    margin: 25px auto;
+    padding: 15px;
+    width: 60%;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 0 8px #ddd;
+}
+
+.history-box p {
+    margin: 8px;
+    color: #555;
+}

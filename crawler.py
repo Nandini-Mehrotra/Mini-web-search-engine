@@ -41,5 +41,13 @@ def crawl_page(url):
 
 
 if __name__ == "__main__":
-    test_url = "https://en.wikipedia.org/wiki/Search_engine"
-    crawl_page(test_url)
+
+    seed_urls = [
+        "https://en.wikipedia.org/wiki/Search_engine",
+        "https://www.geeksforgeeks.org/python-programming-language/",
+        "https://www.w3schools.com/python/",
+        "https://en.wikipedia.org/wiki/Web_crawler"
+    ]
+
+    for url in seed_urls:
+        crawl_page(url)
