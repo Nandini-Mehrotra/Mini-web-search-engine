@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mini Search Engine</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Mini Search Engine</h1>
+
+        <form method="POST">
+            <input 
+                type="text" 
+                name="query" 
+                placeholder="Search anything..."
+                value="{{ query }}"
+                required
+            >
+            <button type="submit">Search</button>
+        </form>
+
+        <div class="results">
+            {% for title, url, content in results %}
+                <div class="result-card">
+                    <h2>{{ title }}</h2>
+                    <a href="{{ url }}" target="_blank">{{ url }}</a>
+                    <p>{{ content[:300] }}...</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</body>
+</html>

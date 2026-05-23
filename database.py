@@ -87,4 +87,22 @@ def get_search_history():
     return history
 
 
+def search_pages(query):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    search_text = f"%{query}%"
+
+    cursor.execute("""
+        SELECT title, url, content
+        FROM pages
+        WHERE title LIKE ? OR content LIKE ?
+    """, (search_text, search_text))
+
+    results = cursor.fetchall()
+
+    conn.close()
+    return results
+
+
 create_tables()
