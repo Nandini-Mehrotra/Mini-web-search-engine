@@ -70,14 +70,16 @@ def save_search_query(query):
     conn.close()
 
 
+#  was facing the issue that the repeated search hostory was showing up in the dashboard, so added the group by and order by clause to show only unique search history and sorted by latest search time
 def get_search_history():
     conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT query, searched_at
+        SELECT query, MAX(searched_at) as latest_time
         FROM search_history
-        ORDER BY searched_at DESC
+        GROUP BY query
+        ORDER BY latest_time DESC
         LIMIT 10
     """)
 
@@ -104,5 +106,61 @@ def search_pages(query):
     conn.close()
     return results
 
+def get_total_pages():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT COUNT(*) FROM pages")
+    total = cursor.fetchone()[0]
+
+    conn.close()
+    return total
+
+
+def get_total_searches():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT COUNT(*) FROM search_history")
+    total = cursor.fetchone()[0]
+
+    conn.close()
+    return total
+
+
+def get_recent_pages():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT title, url
+        FROM pages
+        ORDER BY created_at DESC
+        LIMIT 5
+    """)
+
+    pages = cursor.fetchall()
+
+    conn.close()
+    return pages
+
+def delete_search_query(query):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("DELETE FROM search_history WHERE query = ?", (query,))
+
+    conn.commit()
+    conn.close()
+
+
+def clear_search_history():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("DELETE FROM search_history")
+
+    conn.commit()
+    conn.close()
 
 create_tables()

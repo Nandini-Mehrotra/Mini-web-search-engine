@@ -1,31 +1,57 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Mini Search Engine</title>
+    <title>TechSearch</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 
     <div class="container">
-        <h1>Mini Search Engine</h1>
-
+        <h1>TechSearch</h1>
+        <p class="tagline">Search tech resources from crawled websites</p>
+        <!-- to make the search history more user friendly, added a button to search the same query again and also a delete button to delete the individual search history item -->
+        <div class="search-area">
         <form method="POST">
+            
             <input 
                 type="text" 
                 name="query" 
+                id="searchInput"
                 placeholder="Search anything..."
                 value="{{ query }}"
                 required
             >
+            <div id="suggestions"></div>
             <button type="submit">Search</button>
         </form>
-
+        </div>
+        <div class="nav-links">
+            <a href="/">Search</a>
+            <a href="/admin">Admin</a>
+            <a href="/dashboard">Dashboard</a>
+        </div>
         {% if history %}
             <div class="history-box">
-                <h3>Recent Searches</h3>
+                <div class="section-header">
+                    <h3>Recent Searches</h3>
+
+                    <form method="POST" action="/clear-history">
+                        <button class="small-danger-btn" type="submit">Clear All</button>
+                    </form>
+                </div>
 
                 {% for item in history %}
-                    <p>{{ item[0] }}</p>
+                    <div class="history-item">
+                        <form method="POST" class="history-search-form">
+                            <input type="hidden" name="query" value="{{ item[0] }}">
+                            <button type="submit" class="history-query">{{ item[0] }}</button>
+                        </form>
+
+                        <form method="POST" action="/delete-history">
+                            <input type="hidden" name="query" value="{{ item[0] }}">
+                            <button class="delete-btn" type="submit">Delete</button>
+                        </form>
+                    </div>
                 {% endfor %}
             </div>
         {% endif %}
@@ -39,7 +65,10 @@
                 </div>
             {% endfor %}
         </div>
+        {% if query and results|length == 0 %}
+            <p class="no-results">No results found. Try crawling more tech websites from Admin Panel.</p>
+        {% endif %}
     </div>
-
+<script src="/static/script.js"></script>
 </body>
 </html>

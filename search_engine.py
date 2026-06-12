@@ -1,5 +1,23 @@
+from urllib.parse import urlparse
 from indexer import build_inverted_index
 from text_utils import clean_and_tokenize
+
+
+def get_source_name(url):
+    domain = urlparse(url).netloc
+
+    if "wikipedia" in domain:
+        return "Wikipedia"
+    elif "w3schools" in domain:
+        return "W3Schools"
+    elif "geeksforgeeks" in domain:
+        return "GeeksforGeeks"
+    elif "quotes" in domain:
+        return "Quotes"
+    elif "books" in domain:
+        return "Books"
+    else:
+        return domain
 
 
 def calculate_score(query_words, page_data):
@@ -31,7 +49,7 @@ def create_snippet(content, query_words):
     return content[:300] + "..."
 
 
-def search_with_ranking(query):
+def search_with_ranking(query, selected_source="All"):
     inverted_index = build_inverted_index()
     query_words = clean_and_tokenize(query)
 
@@ -42,9 +60,15 @@ def search_with_ranking(query):
             pages = inverted_index[word]
 
             for page_id, page_data in pages.items():
+                source = get_source_name(page_data["url"])
+
+                if selected_source != "All" and source != selected_source:
+                    continue
+
                 if page_id not in results_dict:
                     results_dict[page_id] = page_data.copy()
                     results_dict[page_id]["score"] = 0
+                    results_dict[page_id]["source"] = source
 
                 results_dict[page_id]["score"] += calculate_score(query_words, page_data)
 
@@ -57,7 +81,8 @@ def search_with_ranking(query):
             "title": data["title"],
             "url": data["url"],
             "snippet": snippet,
-            "score": data["score"]
+            "score": data["score"],
+            "source": data["source"]
         })
 
     final_results.sort(key=lambda x: x["score"], reverse=True)

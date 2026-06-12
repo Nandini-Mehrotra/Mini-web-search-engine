@@ -39,6 +39,8 @@ def crawl_page(url):
     except Exception as e:
         print("Error:", e)
 
+def crawl_url_from_admin(url):
+    crawl_page(url, depth=1)
 
 if __name__ == "__main__":
 

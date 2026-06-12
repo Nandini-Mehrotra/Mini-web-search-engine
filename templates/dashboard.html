@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - TechSearch</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Dashboard</h1>
+
+        <div class="stats">
+            <div class="stat-card">
+                <h2>{{ total_pages }}</h2>
+                <p>Total Pages Crawled</p>
+            </div>
+
+            <div class="stat-card">
+                <h2>{{ total_searches }}</h2>
+                <p>Total Searches</p>
+            </div>
+        </div>
+
+        <div class="dashboard-section">
+            <h2>Recent Crawled Pages</h2>
+
+            {% for title, url in recent_pages %}
+                <div class="result-card">
+                    <h3>{{ title }}</h3>
+                    <a href="{{ url }}" target="_blank">{{ url }}</a>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="dashboard-section">
+            <h2>Recent Searches</h2>
+
+            {% for query, searched_at in history %}
+                <p>{{ query }} — {{ searched_at }}</p>
+            {% endfor %}
+        </div>
+
+        <br>
+        <a href="/">Back to Search</a> |
+        <a href="/admin">Admin Panel</a>
+    </div>
+
+</body>
+</html>
